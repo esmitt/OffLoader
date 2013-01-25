@@ -1,7 +1,7 @@
 OffLoader
 -------------
 
-It is a simple loader of files OFF (Object File Format). The code read the file which is totally basic and contains only triangles, i.e. 3 vertexes by triangle; and no color per vertex/triangle. In order to support quads or more, it is necessary the subdivision of the primitives.
+It is a simple loader of files OFF (Object File Format) written in C++ using OpenGL. The code read the file which is totally basic and contains only triangles, i.e. 3 vertexes by triangle; and no color per vertex/triangle. In order to support quads or more, it is necessary the subdivision of the primitives.
 
 The data structure used is very simple. It is based on stores the number of vertexes, triangles and two dynamic arrays (you can change them by vectors). Also, the base data type such as point3f and others were performed using the OpenGL Mathematics (http://glm.g-truc.net/).
 
