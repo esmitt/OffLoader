@@ -2,7 +2,7 @@
 #include "GL/freeglut.h"
 #include <iostream>
 #pragma comment(lib, "freeglut.lib")
-#define WINDOW_TITLE "Reflections"
+#define WINDOW_TITLE "Template"
 using namespace std;
 
 const float ANGLE = 45.f;
@@ -98,7 +98,7 @@ void reshape(int width, int height)
 bool initialize()
 {
 	off_object = new COffObject();
-	if(!off_object->loadFile("dragon.off"))
+	if(!off_object->loadFile("algo.off"))
 	{
 		std::cout << "error in loadFile inside initialize function." << std::endl;
 		terminate();

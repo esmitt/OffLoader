@@ -5,6 +5,6 @@ It is a simple loader of files OFF (Object File Format) written in C++ using Ope
 
 The data structure used is very simple. It is based on stores the number of vertexes, triangles and two dynamic arrays (you can change them by vectors). Also, the base data type such as point3f and others were performed using the OpenGL Mathematics (http://glm.g-truc.net/).
 
-The code includes the GLM, FreeGLUT (including dll/lib) and a simple .OFF file to test. There are several pages which have .OFF file to download.
+The code includes the GLM, FreeGLUT (including dll/lib) and a simple .OFF file to test. There are several pages which have .OFF file to download. It works for Visual Studio compiler because its using #pragma comment to link the .lib of freeglut.
 
 I REMEMBER AGAIN: this code is only to be used as a template. There is no efficiency inside the code, Actually, it includes the slower and deprecated way to render in OpenGL: glBegin/glEnd.
