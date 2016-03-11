@@ -6,14 +6,20 @@
 using namespace std;
 
 const float ANGLE = 45.f;
-const float FOV = 90.f;
-const float NCP = 0.001f;
-const float FCP = 40.f;
+const float FOV = 70.f;
+const float NCP = 0.05f;
+const float FCP = 50.f;
 int m_iWidth = 800;		//width of the viewport
 int m_iHeight = 600;	//height of the viewport
 COffObject* off_object;
 float angle;	//only for rotation
 float spin;		//only for rotation
+
+void destroy()
+{
+	if (off_object) off_object = NULL;
+}
+
 ///
 /// Function designed to FreeGLU to use the glutKeyboardFunc
 /// @param key represents the key pressed in the keyboard
@@ -25,18 +31,13 @@ void keyboardDown(unsigned char key, int x, int y)
   case 'Q':
   case 'q':
   case  27:   // ESC
-	  terminate();
+	  destroy();
   }
 }
 
 void idle(void)
 {
 	glutPostRedisplay();
-}
-
-void destroy()
-{
-	if(off_object) off_object = NULL;
 }
 
 void draw() {
@@ -109,12 +110,6 @@ bool initialize()
 	return true;
 }
 
-void terminate()
-{
-	std::cout << "terminate function." << std::endl;
-	destroy();
-}
-
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -127,7 +122,7 @@ int main(int argc, char** argv)
 	glutIdleFunc(idle);
 	glutReshapeFunc(reshape);
 	//GUI construction
-	glutCloseFunc(terminate) ;
+	glutCloseFunc(destroy) ;
 	glutMainLoop();
 	return 0;
 }
