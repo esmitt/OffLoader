@@ -12,6 +12,11 @@ OffObject off;
 DISPLAY_TYPE mode = DISPLAY_TYPE::WIRE;
 GLfloat anglex = 0.0, angley = 0.0, anglez = 0.0, scale = 0.5;
 
+
+void init() {
+   glClearColor(0.f, 0.f, 0.f, 0.0f);
+}
+
 void reshape(int width, int height) {
     glViewport (0, 0, (GLsizei) width, (GLsizei) height);
 
@@ -64,7 +69,6 @@ void keyDownSpecial (int key, int x, int y) {
 
 void draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.f, 0.f, 0.f, 0.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
@@ -106,11 +110,14 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowPosition(100, 100);
     glutCreateWindow("OffLoader");
+    init();
     glutDisplayFunc(draw);
     glutKeyboardFunc(keyDown);
     glutSpecialFunc(keyDownSpecial);
     glutReshapeFunc(reshape);
     glutMainLoop();
+
+    off.cleanUp();
 
     return 0;
 }

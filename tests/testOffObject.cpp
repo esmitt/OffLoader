@@ -7,12 +7,18 @@
 
 #include <boost/test/unit_test.hpp>
 #include "OffObject.h"
+#include <iostream>
 
 
 BOOST_AUTO_TEST_SUITE(test_offobject)
     BOOST_AUTO_TEST_CASE(test_load) {
+	std::cout << "Test1 \n";	
         OffObject off;
-        BOOST_CHECK(off.loadFile("./algo.off") == true);
-
+        BOOST_CHECK(off.loadFile("./cube.off") == true);
+    }
+    BOOST_AUTO_TEST_CASE(test_load_no_existing_file) {
+	std::cout << "Test2 \n";	
+        OffObject off;
+        BOOST_CHECK(off.loadFile("./no_existing_file.off") == false);
     }
 BOOST_AUTO_TEST_SUITE_END();
