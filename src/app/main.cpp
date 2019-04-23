@@ -10,7 +10,12 @@ const float FCP = 50.f;
 
 OffObject off;
 DISPLAY_TYPE mode = DISPLAY_TYPE::WIRE;
-GLfloat anglex = 0.0, angley = 0.0, anglez = 0.0, scale = 0.4;
+GLfloat anglex = 0.0, angley = 0.0, anglez = 0.0, scale = 0.5;
+
+
+void init() {
+   glClearColor(0.f, 0.f, 0.f, 0.0f);
+}
 
 void reshape(int width, int height) {
     glViewport (0, 0, (GLsizei) width, (GLsizei) height);
@@ -64,18 +69,31 @@ void keyDownSpecial (int key, int x, int y) {
 
 void draw() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(0.f, 0.f, 0.f, 0.0f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    glTranslatef(0,  0,  -3.0);
+    // put the object in front of the camera
+    glTranslatef(0,  0,  -1.0);
+
+    // apply the scaling required
     glScalef(scale, scale, scale);
 
+    // apply the rotations required
     glRotatef(anglex,  1.0,  0.0,  0.0);
     glRotatef(angley,  0.0,  1.0,  0.0);
     glRotatef(anglez,  0.0,  0.0,  1.0);
 
+    // max length of the object = 1
+    auto magnitude = 1.0f / off.getMagnitude();
+    glScalef(magnitude, magnitude, magnitude);
+
+    // put the center of the object in origin
+    auto centroid = off.getCentroid();
+    glTranslatef(-centroid.x, -centroid.y, -centroid.z);
+
+    // draw the actual object
     off.draw(mode);
+
     glFlush();
     glutSwapBuffers();
 }
@@ -91,12 +109,15 @@ int main(int argc, char** argv) {
     glutInitWindowSize(512, 512);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA | GLUT_DEPTH);
     glutInitWindowPosition(100, 100);
-    glutCreateWindow("OffDisplay");
+    glutCreateWindow("OffLoader");
+    init();
     glutDisplayFunc(draw);
     glutKeyboardFunc(keyDown);
     glutSpecialFunc(keyDownSpecial);
     glutReshapeFunc(reshape);
     glutMainLoop();
+
+    off.cleanUp();
 
     return 0;
 }

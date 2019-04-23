@@ -39,8 +39,9 @@ bool OffObject::loadFile(const std::string & filename) {
     info_stream >> nvertices >> nfaces >> nedges;
 
     // 3 - the actual vertices
-    xmax = ymax = zmax = std::numeric_limits<float>::min();
-    xmin = ymin = zmin = std::numeric_limits<float>::max();
+    topcorner = glm::vec3(std::numeric_limits<float>::min());
+    bottomcorner = glm::vec3(std::numeric_limits<float>::max());
+
     points.reserve(nvertices);
     for(auto i=0; i < nvertices; ++i) {
         if (!get_next_uncommented_line(infile,info)) {
@@ -50,12 +51,14 @@ bool OffObject::loadFile(const std::string & filename) {
         glm::vec3 point;
         info_stream >> point.x >> point.y >> point.z;
         points.emplace_back(point);
-        xmax = std::max(xmax,point.x); ymax = std::max(ymax,point.y); zmax = std::max(zmax,point.z);
-        xmin = std::min(xmin,point.x); ymin = std::min(ymin,point.y); zmin = std::min(zmin,point.z);
+        // Calculating bounding-box
+        topcorner.x = std::max(topcorner.x, point.x);
+        topcorner.y = std::max(topcorner.y, point.y);
+        topcorner.z = std::max(topcorner.z, point.z);
+        bottomcorner.x = std::min(bottomcorner.x, point.x);
+        bottomcorner.y = std::min(bottomcorner.y, point.y);
+        bottomcorner.z = std::min(bottomcorner.z, point.z);
     }
-    centroid.x = 0.5 * (xmax + xmin);
-    centroid.y = 0.5 * (ymax + ymin);
-    centroid.z = 0.5 * (zmax + zmin);
 
     // 4 - the actual faces
     polygons.reserve(nfaces);
@@ -75,9 +78,7 @@ bool OffObject::loadFile(const std::string & filename) {
     }
 
     infile.close();
-    normalize();
-    loaded = true;
-    return true;
+    return (loaded = true);
 }
 
 void OffObject::draw(DISPLAY_TYPE displayType) const {
@@ -91,29 +92,10 @@ void OffObject::draw(DISPLAY_TYPE displayType) const {
         GLenum mode = (displayType == DISPLAY_TYPE::POLYGONS)? GL_POLYGON : GL_LINE_LOOP;
         for(const auto & indexes : polygons) {
             glBegin(mode);
-            for (const auto &i : indexes) {
+            for (const auto & i : indexes) {
                 glVertex3f(points[i].x, points[i].y, points[i].z);
             }
             glEnd();
         }
-    }
-}
-
-void OffObject::normalize() {
-    // centroid of the object at origin
-    xmax = ymax = zmax = std::numeric_limits<double>::min();
-    xmin = ymin = zmin = std::numeric_limits<double>::max();
-    for (auto & point : points) {
-        point -= centroid;
-        xmax = std::max(xmax,point.x); ymax = std::max(ymax,point.y); zmax = std::max(zmax,point.z);
-        xmin = std::min(xmin,point.x); ymin = std::min(ymin,point.y); zmin = std::min(zmin,point.z);
-    }
-
-    // rescaling max 1.0
-    GLfloat mag = std::max(std::abs(xmax), std::abs(xmin));
-            mag = std::max(mag,std::max(std::abs(ymax), std::abs(ymin)));
-            mag = std::max(mag,std::max(std::abs(zmax), std::abs(zmin)));
-    for (auto & point : points) {
-        point /= mag;
     }
 }
